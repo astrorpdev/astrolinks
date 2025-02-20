@@ -19,6 +19,7 @@
             background: url('background.png') no-repeat center center/cover;
             position: relative;
             flex-direction: column;
+            padding: 20px; /* Add padding for mobile */
         }
         body::before {
             content: '';
@@ -34,12 +35,13 @@
         .container {
             text-align: center;
             background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
+            padding: 20px; /* Adjust padding for mobile */
             border-radius: 12px;
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             color: white;
-            width: 450px;
+            width: 100%; /* Make container full width on mobile */
+            max-width: 450px; /* Limit max width */
         }
         .watermark {
             width: 300px;  /* Enlarged watermark size */
@@ -55,6 +57,7 @@
             border-radius: 8px;
             transition: all 0.3s ease;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Stronger text shadow */
+            font-size: 16px; /* Adjust font size for mobile */
         }
         .links a:hover {
             background: rgba(255, 255, 255, 0.4);
@@ -76,6 +79,7 @@
             color: white;
             font-size: 14px;
             text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Added text shadow */
+            flex-wrap: wrap; /* Allow wrapping on mobile */
         }
         .footer-left {
             background: rgba(255, 255, 255, 0.1);
@@ -83,10 +87,14 @@
             border-radius: 6px;
             text-align: center;
             height: auto;
+            width: 100%; /* Full width on mobile */
+            margin-bottom: 10px; /* Add margin for spacing */
         }
         .footer-right {
             display: flex;
             gap: 10px;
+            width: 100%; /* Full width on mobile */
+            justify-content: center; /* Center icons on mobile */
         }
         .footer-right a {
             text-decoration: none;
@@ -110,6 +118,51 @@
         }
         .contact-space {
             margin-top: 20px;
+        }
+        .footer-right a.copied {
+            animation: bounce 0.3s ease;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        .footer-right a img.fade {
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+        .popup-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: #009aff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #009aff;
+            opacity: 0;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            visibility: hidden;
+            z-index: 1000;
+            text-align: center;
+            width: calc(100% - 40px); /* Adjust width for mobile */
+            max-width: 450px; /* Limit max width */
+        }
+        .popup-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup-message h4 {
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        .popup-message p {
+            margin: 0;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -137,7 +190,43 @@
             <a href="https://www.astrorp.io" target="_blank">
                 <img src="website-icon.png" alt="Website">
             </a>
+            <a href="#" onclick="copyToClipboard('connect play.astrorp.io', this)">
+                <img src="fivem-icon.png" alt="FiveM">
+            </a>
         </div>
     </div>
+    <div class="popup-message" id="popupMessage">
+        <h4>Link Copied!</h4>
+        <p>Open FiveM, Press F8, and Paste This!</p>
+    </div>
+    <script>
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(function() {
+                const img = element.querySelector('img');
+                const originalIcon = img.src;
+                img.classList.add('fade');
+                setTimeout(() => {
+                    img.src = 'check-icon.png';
+                    img.classList.remove('fade');
+                    setTimeout(() => {
+                        img.classList.add('fade');
+                        setTimeout(() => {
+                            img.src = originalIcon;
+                            img.classList.remove('fade');
+                        }, 500);
+                    }, 3000);
+                }, 500);
+
+                // Show custom popup message
+                const popupMessage = document.getElementById('popupMessage');
+                popupMessage.classList.add('show');
+                setTimeout(() => {
+                    popupMessage.classList.remove('show');
+                }, 3000);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
 </body>
 </html>
